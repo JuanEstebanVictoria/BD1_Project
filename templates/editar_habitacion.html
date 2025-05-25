@@ -1,0 +1,14 @@
+<h2>Editar Habitación</h2>
+<form method="POST">
+    Número: <input type="text" name="numero" value="{{ habitacion.numero }}"><br>
+    Categoría: <input type="text" name="categoria" value="{{ habitacion.categoria }}"><br>
+    Capacidad: <input type="number" name="capacidad" value="{{ habitacion.capacidad }}"><br>
+    Precio por noche: <input type="number" step="0.01" name="precio" value="{{ habitacion.precio_por_noche }}"><br>
+    Estado: 
+    <select name="estado">
+        <option value="libre" {% if habitacion.estado == 'libre' %}selected{% endif %}>Libre</option>
+        <option value="ocupada" {% if habitacion.estado == 'ocupada' %}selected{% endif %}>Ocupada</option>
+        <option value="mantenimiento" {% if habitacion.estado == 'mantenimiento' %}selected{% endif %}>Mantenimiento</option>
+    </select><br>
+    <input type="submit" value="Actualizar">
+</form>

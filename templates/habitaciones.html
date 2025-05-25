@@ -1,0 +1,30 @@
+<h2>Listado de Habitaciones</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Número</th>
+    <th>Categoría</th>
+    <th>Capacidad</th>
+    <th>Precio</th>
+    <th>Estado</th>
+  </tr>
+  {% for h in habitaciones %}
+  <tr>
+    <td>{{ h.id }}</td>
+    <td>{{ h.numero }}</td>
+    <td>{{ h.categoria }}</td>
+    <td>{{ h.capacidad }}</td>
+    <td>${{ h.precio_por_noche }}</td>
+    <td>{{ h.estado }}</td>
+    <td>
+      <a href="/habitaciones/editar/{{ h.id }}">Editar</a> |
+      <a
+        href="/habitaciones/eliminar/{{ h.id }}"
+        onclick="return confirm('¿Estás seguro de eliminar esta habitación?');">Eliminar</a>
+        </a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="/habitaciones/crear">Crear nueva habitación</a>

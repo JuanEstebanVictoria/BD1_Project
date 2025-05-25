@@ -1,1 +1,9 @@
- 
+# Ignora el entorno virtual
+venv/
+
+# Otros comunes
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+.env

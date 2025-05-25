@@ -1,0 +1,11 @@
+<h2>Editar Huésped</h2>
+<form method="POST">
+  Nombre: <input type="text" name="nombre" value="{{ huesped.nombre }}" /><br />
+  Documento:
+  <input type="text" name="documento" value="{{ huesped.documento }}" /><br />
+  Teléfono:
+  <input type="text" name="telefono" value="{{ huesped.telefono }}" /><br />
+  Correo:
+  <input type="email" name="correo" value="{{ huesped.correo }}" /><br />
+  <input type="submit" value="Actualizar" />
+</form>

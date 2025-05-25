@@ -1,6 +1,14 @@
 <h2>Editar Reserva</h2>
 <form method="POST">
-    Nombre del huésped: <input type="text" name="nombre_huesped" value="{{ reserva.nombre_huesped }}"><br>
+    Huésped:
+    <select name="huesped_id">
+        {% for h in huespedes %}
+        <option value="{{ h.id }}" {% if h.id == reserva.huesped_id %}selected{% endif %}>
+            {{ h.nombre }} - {{ h.documento }}
+        </option>
+        {% endfor %}
+    </select><br>
+
     Habitación:
     <select name="habitacion_id">
         {% for h in habitaciones %}
@@ -9,13 +17,16 @@
         </option>
         {% endfor %}
     </select><br>
+
     Fecha de entrada: <input type="date" name="fecha_entrada" value="{{ reserva.fecha_entrada }}"><br>
     Fecha de salida: <input type="date" name="fecha_salida" value="{{ reserva.fecha_salida }}"><br>
+
     Estado:
     <select name="estado">
         <option value="activa" {% if reserva.estado == 'activa' %}selected{% endif %}>Activa</option>
         <option value="cancelada" {% if reserva.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
         <option value="finalizada" {% if reserva.estado == 'finalizada' %}selected{% endif %}>Finalizada</option>
     </select><br>
+
     <input type="submit" value="Actualizar">
 </form>

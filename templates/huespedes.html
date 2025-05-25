@@ -1,0 +1,29 @@
+<h2>Listado de Huéspedes</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Documento</th>
+    <th>Teléfono</th>
+    <th>Correo</th>
+    <th>Acciones</th>
+  </tr>
+  {% for h in huespedes %}
+  <tr>
+    <td>{{ h.id }}</td>
+    <td>{{ h.nombre }}</td>
+    <td>{{ h.documento }}</td>
+    <td>{{ h.telefono }}</td>
+    <td>{{ h.correo }}</td>
+    <td>
+      <a href="/huespedes/editar/{{ h.id }}">Editar</a> |
+      <a
+        href="/huespedes/eliminar/{{ h.id }}"
+        onclick="return confirm('¿Eliminar este huésped?');"
+        >Eliminar</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="/huespedes/crear">Crear nuevo huésped</a>

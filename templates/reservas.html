@@ -7,15 +7,20 @@
     <th>Entrada</th>
     <th>Salida</th>
     <th>Estado</th>
+    {% if session.rol == 'admin' %}
+    <th>Acciones</th>
+    {% endif %}
   </tr>
   {% for r in reservas %}
   <tr>
     <td>{{ r.id }}</td>
-    <td>{{ r.nombre_huesped }}</td>
+    <td>{{ r.huesped_id }}</td>
+    {# Reemplaza por r.huesped.nombre si lo unes con JOIN luego #}
     <td>{{ r.habitacion_id }}</td>
     <td>{{ r.fecha_entrada }}</td>
     <td>{{ r.fecha_salida }}</td>
     <td>{{ r.estado }}</td>
+    {% if session.rol == 'admin' %}
     <td>
       <a href="/reservas/editar/{{ r.id }}">Editar</a> |
       <a
@@ -24,7 +29,11 @@
         >Eliminar</a
       >
     </td>
+    {% endif %}
   </tr>
   {% endfor %}
 </table>
+
+{% if session.usuario_id %}
 <a href="/reservas/crear">Crear nueva reserva</a>
+{% endif %}

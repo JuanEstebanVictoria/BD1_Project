@@ -8,10 +8,17 @@ from dao.reserva_dao import ReservaDAO
 from models.reserva import Reserva
 from dao.huesped_dao import HuespedDAO
 from models.huesped import Huesped
+from flask import session, url_for
+from dao.usuario_dao import UsuarioDAO
+from models.usuario import Usuario
+from utils.decoradores import login_requerido, rol_requerido
+
+
 
 
 
 app = Flask(__name__)
+app.secret_key = 'clave_secreta_segura'
 
 @app.route('/')
 def index():
@@ -29,6 +36,8 @@ def listar_habitaciones():
     return render_template('habitaciones.html', habitaciones=habitaciones)
 
 @app.route('/habitaciones/crear', methods=['GET', 'POST'])
+@login_requerido
+@rol_requerido('admin')
 def crear_habitacion():
     if request.method == 'POST':
         numero = request.form['numero']
@@ -59,6 +68,7 @@ def eliminar_habitacion(id):
     return redirect('/habitaciones')
 
 @app.route('/reservas')
+@login_requerido
 def listar_reservas():
     reservas = ReservaDAO.obtener_todas()
     return render_template('reservas.html', reservas=reservas)
@@ -138,6 +148,39 @@ def editar_huesped(id):
 def eliminar_huesped(id):
     HuespedDAO.eliminar(id)
     return redirect('/huespedes')
+
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        username = request.form['username']
+        password = request.form['password']
+        rol = request.form['rol']
+        nuevo = Usuario(None, nombre, username, password, rol)
+        UsuarioDAO.insertar(nuevo)
+        return redirect('/login')
+    return render_template('registro.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        usuario = UsuarioDAO.buscar_por_username(username)
+        if usuario and usuario.password == password:
+            session['usuario_id'] = usuario.id
+            session['username'] = usuario.username
+            session['rol'] = usuario.rol
+            return redirect('/')
+        else:
+            return render_template('login.html', error='Credenciales inválidas')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
 
 
 

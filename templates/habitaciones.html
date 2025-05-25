@@ -7,6 +7,9 @@
     <th>Capacidad</th>
     <th>Precio</th>
     <th>Estado</th>
+    {% if session.rol == 'admin' %}
+    <th>Acciones</th>
+    {% endif %}
   </tr>
   {% for h in habitaciones %}
   <tr>
@@ -16,15 +19,20 @@
     <td>{{ h.capacidad }}</td>
     <td>${{ h.precio_por_noche }}</td>
     <td>{{ h.estado }}</td>
+    {% if session.rol == 'admin' %}
     <td>
       <a href="/habitaciones/editar/{{ h.id }}">Editar</a> |
       <a
         href="/habitaciones/eliminar/{{ h.id }}"
-        onclick="return confirm('¿Estás seguro de eliminar esta habitación?');">Eliminar</a>
-        </a
+        onclick="return confirm('¿Estás seguro de eliminar esta habitación?');"
+        >Eliminar</a
       >
     </td>
+    {% endif %}
   </tr>
   {% endfor %}
 </table>
+
+{% if session.rol == 'admin' %}
 <a href="/habitaciones/crear">Crear nueva habitación</a>
+{% endif %}

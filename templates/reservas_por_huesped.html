@@ -1,0 +1,22 @@
+<h2>Reservas del Huésped</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Huésped</th>
+    <th>ID Habitación</th>
+    <th>Entrada</th>
+    <th>Salida</th>
+    <th>Estado</th>
+  </tr>
+  {% for r in reservas %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.nombre_huesped }}</td>
+    <td>{{ r.habitacion_id }}</td>
+    <td>{{ r.fecha_entrada }}</td>
+    <td>{{ r.fecha_salida }}</td>
+    <td>{{ r.estado }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="/huespedes">Volver a huéspedes</a>

@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from db import get_connection
+from datetime import datetime
+from flask import abort
 
 # Módulos del sistema
 from dao.habitacion_dao import HabitacionDAO
@@ -81,7 +83,15 @@ def crear_reserva():
         fecha_entrada = request.form['fecha_entrada']
         fecha_salida = request.form['fecha_salida']
         estado = request.form['estado']
-        reserva = Reserva(None, huesped_id, habitacion_id, fecha_entrada, fecha_salida, estado)
+        reserva = Reserva(
+        id=None,
+        nombre_huesped="",  # este campo es solo para mostrar, no lo usamos en inserción
+        habitacion_id=habitacion_id,
+        fecha_entrada=fecha_entrada,
+        fecha_salida=fecha_salida,
+        estado=estado,
+        huesped_id=int(huesped_id)  # 👈 esto es clave
+        )
         ReservaDAO.insertar(reserva)
         return redirect('/reservas')
     
@@ -114,6 +124,43 @@ def editar_reserva(id):
 def eliminar_reserva(id):
     ReservaDAO.eliminar(id)
     return redirect('/reservas')
+
+@app.route('/reservas/checkin/<int:id>')
+def checkin_reserva(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE Reserva SET check_in = ?, estado = 'ocupada' WHERE id = ?", (datetime.now(), id))
+    conn.commit()
+    conn.close()
+    return redirect('/reservas')
+
+@app.route('/reservas/checkout/<int:id>')
+def checkout_reserva(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE Reserva SET check_out = ?, estado = 'finalizada' WHERE id = ?", (datetime.now(), id))
+    conn.commit()
+    conn.close()
+    return redirect('/reservas')
+
+@app.route('/reservas/<int:id>/factura')
+def factura_reserva(id):
+    reserva = ReservaDAO.obtener_por_id(id)
+    if not reserva:
+        abort(404)
+
+    # Obtener datos de habitación y huésped
+    from dao.habitacion_dao import HabitacionDAO
+    from dao.huesped_dao import HuespedDAO
+
+    habitacion = HabitacionDAO.obtener_por_id(reserva.habitacion_id)
+    huesped = HuespedDAO.obtener_por_id(reserva.huesped_id)
+
+    # Calcular número de noches
+    noches = (reserva.fecha_salida - reserva.fecha_entrada).days
+    total = noches * habitacion.precio_por_noche
+
+    return render_template('factura.html', reserva=reserva, habitacion=habitacion, huesped=huesped, noches=noches, total=total)
 
 @app.route('/huespedes')
 def listar_huespedes():
@@ -149,6 +196,12 @@ def eliminar_huesped(id):
     HuespedDAO.eliminar(id)
     return redirect('/huespedes')
 
+@app.route('/huespedes/<int:id>/reservas')
+def reservas_por_huesped(id):
+    reservas = ReservaDAO.obtener_por_huesped(id)
+    return render_template('reservas_por_huesped.html', reservas=reservas)
+
+
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
@@ -160,6 +213,7 @@ def registro():
         UsuarioDAO.insertar(nuevo)
         return redirect('/login')
     return render_template('registro.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -181,10 +235,47 @@ def logout():
     session.clear()
     return redirect('/')
 
+@app.route('/usuarios')
+@login_requerido
+@rol_requerido('admin')
+def listar_usuarios():
+    usuarios = UsuarioDAO.obtener_todos()
+    return render_template('usuarios.html', usuarios=usuarios)
 
+@app.route('/usuarios/crear', methods=['GET', 'POST'])
+@login_requerido
+@rol_requerido('admin')
+def crear_usuario():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        username = request.form['username']
+        password = request.form['password']
+        rol = request.form['rol']
+        nuevo = Usuario(None, nombre, username, password, rol)
+        UsuarioDAO.insertar(nuevo)
+        return redirect('/usuarios')
+    return render_template('crear_usuario.html')
 
+@app.route('/usuarios/editar/<int:id>', methods=['GET', 'POST'])
+@login_requerido
+@rol_requerido('admin')
+def editar_usuario(id):
+    usuario = UsuarioDAO.buscar_por_id(id)
+    if request.method == 'POST':
+        usuario.nombre = request.form['nombre']
+        usuario.username = request.form['username']
+        usuario.password = request.form['password']
+        usuario.rol = request.form['rol']
+        UsuarioDAO.actualizar(usuario)
+        return redirect('/usuarios')
+    return render_template('editar_usuario.html', usuario=usuario)
 
-
+@app.route('/usuarios/eliminar/<int:id>')
+@login_requerido
+@rol_requerido('admin')
+def eliminar_usuario(id):
+    UsuarioDAO.eliminar(id)
+    return redirect('/usuarios')
 
 if __name__ == '__main__':
     app.run(debug=True)

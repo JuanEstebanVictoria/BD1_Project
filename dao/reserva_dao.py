@@ -9,7 +9,7 @@ class ReservaDAO:
         cursor.execute("SELECT * FROM Reserva")
         reservas = []
         for row in cursor.fetchall():
-            reservas.append(Reserva(row.id, row.huesped_id, row.habitacion_id, row.fecha_entrada, row.fecha_salida, row.estado))
+            reservas.append(Reserva(row.id, row.huesped_id, row.habitacion_id, row.fecha_entrada, row.fecha_salida, row.estado, row.check_in, row.check_out))
         conn.close()
         return reservas
 
@@ -53,3 +53,21 @@ class ReservaDAO:
         cursor.execute("DELETE FROM Reserva WHERE id = ?", (id,))
         conn.commit()
         conn.close()
+    
+    @staticmethod
+    def obtener_por_huesped(huesped_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT r.id, h.nombre AS nombre_huesped, r.habitacion_id, r.fecha_entrada, r.fecha_salida, r.estado
+            FROM Reserva r
+            JOIN Huesped h ON r.huesped_id = h.id
+            WHERE r.huesped_id = ?
+        """, (huesped_id,))
+        reservas = []
+        for row in cursor.fetchall():
+            reservas.append(Reserva(row.id, row.nombre_huesped, row.habitacion_id, row.fecha_entrada, row.fecha_salida, row.estado))
+        conn.close()
+        return reservas
+
+    

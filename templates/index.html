@@ -11,6 +11,17 @@
     {% if session.username %}
     <p>Bienvenido, {{ session.username }} ({{ session.rol }})</p>
     <a href="/logout">Cerrar sesión</a>
+    <hr />
+
+    <h3>Menú principal</h3>
+    <ul>
+      <li><a href="/habitaciones">Habitaciones</a></li>
+      <li><a href="/huespedes">Huéspedes</a></li>
+      <li><a href="/reservas">Reservas</a></li>
+      {% if session.rol == 'admin' %}
+      <li><a href="/usuarios">Gestión de usuarios</a></li>
+      {% endif %}
+    </ul>
     {% else %}
     <a href="/login">Iniciar sesión</a> |
     <a href="/registro">Registrarse</a>

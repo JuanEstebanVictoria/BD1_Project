@@ -1,0 +1,14 @@
+<h2>Editar Usuario</h2>
+<form method="POST">
+  Nombre: <input type="text" name="nombre" value="{{ usuario.nombre }}"><br>
+  Username: <input type="text" name="username" value="{{ usuario.username }}"><br>
+  Contraseña: <input type="password" name="password" value="{{ usuario.password }}"><br>
+  Rol:
+  <select name="rol">
+    <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>Administrador</option>
+    <option value="recepcionista" {% if usuario.rol == 'recepcionista' %}selected{% endif %}>Recepcionista</option>
+  </select><br>
+  <input type="submit" value="Actualizar">
+</form>
+
+<a href="/usuarios">Volver</a>

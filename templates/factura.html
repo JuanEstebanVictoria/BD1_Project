@@ -1,0 +1,17 @@
+<h2>Factura de Reserva</h2>
+
+<p><strong>Cliente:</strong> {{ huesped.nombre }} ({{ huesped.documento }})</p>
+<p>
+  <strong>Habitación:</strong> #{{ habitacion.numero }} - {{
+  habitacion.categoria }}
+</p>
+<p>
+  <strong>Fechas:</strong> {{ reserva.fecha_entrada }} a {{ reserva.fecha_salida
+  }}
+</p>
+<p><strong>Noches:</strong> {{ noches }}</p>
+<p><strong>Precio por noche:</strong> ${{ habitacion.precio_por_noche }}</p>
+<p><strong>Total a pagar:</strong> <strong>${{ total }}</strong></p>
+
+<hr />
+<a href="/reservas">Volver</a>

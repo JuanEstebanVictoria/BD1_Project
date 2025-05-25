@@ -1,0 +1,29 @@
+<h2>Gestión de Usuarios</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Username</th>
+    <th>Rol</th>
+    <th>Acciones</th>
+  </tr>
+  {% for u in usuarios %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.nombre }}</td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.rol }}</td>
+    <td>
+      <a href="/usuarios/editar/{{ u.id }}">Editar</a> |
+      <a
+        href="/usuarios/eliminar/{{ u.id }}"
+        onclick="return confirm('¿Eliminar este usuario?');"
+        >Eliminar</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<a href="/usuarios/crear">Crear nuevo usuario</a> |
+<a href="/">Volver al inicio</a>

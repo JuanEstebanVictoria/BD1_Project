@@ -1,0 +1,30 @@
+<h2>Listado de Reservas</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Huésped</th>
+    <th>ID Habitación</th>
+    <th>Entrada</th>
+    <th>Salida</th>
+    <th>Estado</th>
+  </tr>
+  {% for r in reservas %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.nombre_huesped }}</td>
+    <td>{{ r.habitacion_id }}</td>
+    <td>{{ r.fecha_entrada }}</td>
+    <td>{{ r.fecha_salida }}</td>
+    <td>{{ r.estado }}</td>
+    <td>
+      <a href="/reservas/editar/{{ r.id }}">Editar</a> |
+      <a
+        href="/reservas/eliminar/{{ r.id }}"
+        onclick="return confirm('¿Eliminar esta reserva?');"
+        >Eliminar</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="/reservas/crear">Crear nueva reserva</a>

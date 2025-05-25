@@ -1,0 +1,19 @@
+<h2>Crear Nueva Reserva</h2>
+<form method="POST">
+  Nombre del huésped: <input type="text" name="nombre_huesped" /><br />
+  Habitación:
+  <select name="habitacion_id">
+    {% for h in habitaciones %}
+    <option value="{{ h.id }}">#{{ h.numero }} - {{ h.categoria }}</option>
+    {% endfor %}</select
+  ><br />
+  Fecha de entrada: <input type="date" name="fecha_entrada" /><br />
+  Fecha de salida: <input type="date" name="fecha_salida" /><br />
+  Estado:
+  <select name="estado">
+    <option value="activa">Activa</option>
+    <option value="cancelada">Cancelada</option>
+    <option value="finalizada">Finalizada</option></select
+  ><br />
+  <input type="submit" value="Guardar" />
+</form>
